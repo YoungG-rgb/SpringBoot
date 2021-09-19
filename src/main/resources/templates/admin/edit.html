@@ -24,11 +24,17 @@
     <div style="color: red" th:if="${#fields.hasErrors('login')}" th:errors="*{login}">Age error</div><br>
 
     <label for="password">Enter password</label>
-    <input type="text" th:field="*{password}" id="password"/><br/>
+    <input type="text"  id="password"/><br/>
     <div style="color: red" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Age error</div><br>
 
-    <label for="roles">Roles</label>
-    <input type="text" th:field="*{roles}" id="roles"/><br/>
+    <div>
+      <select name="hasRoles" multiple required size="3">
+        <option disabled selected>has Roles</option>
+        <div th:each="roles : ${user.getRoles()}">
+          <option name="roles" th:text="${roles.getRole()}" th:value="${roles.getId()}" selected></option>
+        </div>
+      </select>
+    </div>
 
     <div>
       <p> Choose role: </p>

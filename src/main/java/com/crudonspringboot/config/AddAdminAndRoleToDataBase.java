@@ -1,11 +1,12 @@
-package com.crudonspringboot.service;
+package com.crudonspringboot.config;
 
 
 import com.crudonspringboot.models.Role;
 import com.crudonspringboot.models.User;
+import com.crudonspringboot.service.RoleService;
+import com.crudonspringboot.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 import javax.annotation.PostConstruct;
 
 @Component
@@ -30,9 +31,9 @@ public class AddAdminAndRoleToDataBase {
         // Admin
         User admin = new User("Zhalaldin", "Toichubaev", (byte)20, "Zhalal", "admin");
         // User
-        User user = new User("Igor", "Ptushkin",(byte)27, "Igorek","igorek123");
-        // saveAll
+        User user = new User("Igor", "Ptushkin",(byte)27, "Igorek","igorek");
+        // save people with roles
         userService.add(admin, new Long[]{1L, 2L});
-        userService.add(user, new Long[] {2L});
+        userService.add(user, new Long[]{2L});
     }
 }

@@ -16,27 +16,27 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+@Transactional
 @Service
 public class UserServiceImpl implements UserService {
 
-    private final PasswordEncoder passwordEncoder;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     private final UserDao userDao;
     private final RoleDao roleDao;
 
     @Autowired
-    public UserServiceImpl(UserDao userDao, RoleDao roleDao, PasswordEncoder passwordEncoder) {
+    public UserServiceImpl(UserDao userDao, RoleDao roleDao ) {
         this.userDao = userDao;
         this.roleDao = roleDao;
-        this.passwordEncoder = passwordEncoder;
     }
 
-    @Transactional
     @Override
     public List<User> getAllUsers() {
         return userDao.getAllUsers();
     }
 
-    @Transactional
     @Override
     public void add(User user, Long [] roles) {
         Set <Role> containerRoles = new HashSet<>();
@@ -52,34 +52,25 @@ public class UserServiceImpl implements UserService {
         userDao.add(user);
     }
 
-    @Transactional
     @Override
     public void delete(int id) {
         userDao.delete(id);
     }
 
-    @Transactional
     @Override
     public void update(User user, Long [] roles) {
-        if (roles != null) {
-            user.setRoles(
-                    Arrays.stream(roles)
-                    .map(roleDao::getRoleById)
-                    .collect(Collectors.toSet())
-            );
-        }
-
+        user.setRoles(Arrays.stream(roles)
+                .map(roleDao::getRoleById)
+                .collect(Collectors.toSet()));
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userDao.update(user);
     }
 
-    @Transactional
     @Override
     public User getById(int id) {
         return userDao.getById(id);
     }
 
-    @Transactional
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
         User user = userDao.getUserByName(s);
