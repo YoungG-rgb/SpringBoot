@@ -1,39 +1,43 @@
 package com.crudonspringboot.service;
 
 
-import com.crudonspringboot.dao.RoleDao;
+import com.crudonspringboot.repository.RoleRepository;
 import com.crudonspringboot.models.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+
+import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
-
 public class RoleServiceImpl implements RoleService{
 
-    private RoleDao roleDao;
+    private RoleRepository roleRepository;
 
     @Autowired
-    public RoleServiceImpl(RoleDao roleDao) {
-        this.roleDao = roleDao;
+    public RoleServiceImpl(RoleRepository roleRepository) {
+        this.roleRepository = roleRepository;
     }
 
-    @Transactional
     @Override
     public void save(Role role) {
-        roleDao.save(role);
+        roleRepository.save(role);
     }
 
-    @Transactional
     @Override
     public Set<Role> getAllRoles() {
-        return roleDao.getAllRoles();
+        return new HashSet<>(roleRepository.findAll());
+        // git branch bootStrap
     }
 
-    @Transactional
     @Override
     public Role getRoleById(Long id) {
-        return roleDao.getRoleById(id);
+        Role role = null;
+        Optional <Role> optional = roleRepository.findById(id);
+        if (optional.isPresent()) {
+            role = optional.get();
+        }
+        return role;
     }
 }

@@ -1,7 +1,7 @@
 package com.crudonspringboot.service;
 
-import com.crudonspringboot.dao.RoleDao;
-import com.crudonspringboot.dao.UserDao;
+import com.crudonspringboot.repository.RoleRepository;
+import com.crudonspringboot.repository.UserRepository;
 import com.crudonspringboot.models.Role;
 import com.crudonspringboot.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,63 +16,62 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@Transactional
 @Service
 public class UserServiceImpl implements UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    private final UserDao userDao;
-    private final RoleDao roleDao;
+    private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
 
     @Autowired
-    public UserServiceImpl(UserDao userDao, RoleDao roleDao) {
-        this.userDao = userDao;
-        this.roleDao = roleDao;
+    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository) {
+        this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
     }
 
     @Override
     public List<User> getAllUsers() {
-        return userDao.getAllUsers();
+        return userRepository.findAll();
     }
 
     @Override
     public void add(User user, Long [] roles) {
         Set <Role> containerRoles = new HashSet<>();
         if (roles == null) {
-            containerRoles.add(roleDao.getRoleById(2L));
+            containerRoles.add(roleRepository.findById(2L).get());
         } else {
             containerRoles = Arrays.stream(roles)
-                    .map(roleDao::getRoleById)
+                    .map(e -> roleRepository.findById(e).get())
                     .collect(Collectors.toSet());
         }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRoles(containerRoles);
-        userDao.add(user);
+        userRepository.save(user);
     }
 
     @Override
     public void delete(int id) {
-        userDao.delete(id);
+        userRepository.deleteById(id);
     }
 
     @Override
     public void update(User user, Long [] roles) {
         user.setRoles(Arrays.stream(roles)
-                .map(roleDao::getRoleById)
+                .map(e -> roleRepository.findById(e).get())
                 .collect(Collectors.toSet()));
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        userDao.update(user);
+        userRepository.save(user);
     }
 
     @Override
     public User getById(int id) {
-        return userDao.getById(id);
+        return userRepository.getById(id);
     }
 
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
-        User user = userDao.getUserByName(s);
+        User user = userRepository.getUserByLogin(s);
         if (user == null){
             throw new UsernameNotFoundException("USERNAME IS NULL");
         }
