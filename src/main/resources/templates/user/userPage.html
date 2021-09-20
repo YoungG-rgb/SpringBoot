@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Here users page</title>
+    <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/456/456212.png" type="image/x-icon">
+
+    <style>
+        #window {
+            width: 670px;
+            text-align: left;
+            padding: 15px;
+            border: none;
+            color: black;
+            background: white;
+        }
+        #window:target {display: block;}
+        .button {
+            color: white;
+            font-size: 30px;
+            display: block;
+            text-decoration: none;
+            text-align: center;
+            padding: 20px 50px;
+            background: #4CAF50;
+            max-width: 600px;
+        }
+        body {
+            color: rgb(255, 255, 255);
+            font-style: normal;
+            font-weight: normal;
+            font-size: 20px;
+            line-height: 27px;
+            background: url("https://proprikol.ru/wp-content/uploads/2020/12/kartinki-rik-i-morti-28.jpg");
+        }
+    </style>
+</head>
+<body>
+    <a href="#window" class="button">Info</a>
+    <div id="window">
+        <tr th:each="user : ${currentUser}">
+            <p>Name: <td th:text="${user.getName} "></td>
+            <td th:text="${user.getLastName()}"></td>
+            </p>
+            <p>Login: <td th:text="${user.getLogin()}"></td></p>
+            <p>Password: <td th:text="${user.getPassword()}"></td></p>
+            <p>Roles: <td th:text="${user.getRoles()}"></td></p>
+        </tr>
+    </div>
+    <a href="/logout"><button style="background-color: red; font-size: 20px;">Exit</button></a>
+</body>
+</html>
