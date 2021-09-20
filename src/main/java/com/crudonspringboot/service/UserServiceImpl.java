@@ -19,7 +19,6 @@ import java.util.stream.Collectors;
 @Transactional
 @Service
 public class UserServiceImpl implements UserService {
-
     @Autowired
     private PasswordEncoder passwordEncoder;
 
@@ -27,7 +26,7 @@ public class UserServiceImpl implements UserService {
     private final RoleDao roleDao;
 
     @Autowired
-    public UserServiceImpl(UserDao userDao, RoleDao roleDao ) {
+    public UserServiceImpl(UserDao userDao, RoleDao roleDao) {
         this.userDao = userDao;
         this.roleDao = roleDao;
     }
