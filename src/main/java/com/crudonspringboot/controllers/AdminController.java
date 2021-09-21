@@ -8,6 +8,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
+
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
@@ -21,22 +23,11 @@ public class AdminController {
     }
 
     @GetMapping()
-    public String index(Model model){
+    public String index(@ModelAttribute("newUser") User user, Model model, Principal principal){
         model.addAttribute("user", userService.getAllUsers());
-        return "admin/index";
-    }
-
-    @GetMapping("/{id}")
-    public String showPerson(@PathVariable("id")int id, Model model){
-        model.addAttribute("user", userService.getById(id));
-        return "admin/show";
-    }
-
-    @GetMapping("/new")
-    public String newPerson(@ModelAttribute("user") User user,
-                            Model model){
+        model.addAttribute("currentUser", userService.loadUserByUsername(principal.getName()));
         model.addAttribute("AllRoles", roleService.getAllRoles());
-        return "admin/new";
+        return "admin/index";
     }
 
     @PostMapping()
@@ -46,11 +37,10 @@ public class AdminController {
         return "redirect:/admin";
     }
 
-    @GetMapping("/{id}/edit")
+    @GetMapping("/{id}/update")
     public String editPerson(Model model, @PathVariable("id") int id) {
-        model.addAttribute("user", userService.getById(id));
-        model.addAttribute("AllRoles", roleService.getAllRoles());
-        return "admin/edit";
+        model.addAttribute("userForUpdate", userService.getById(id));
+        return "admin/index";
     }
 
     @PatchMapping("/{id}")

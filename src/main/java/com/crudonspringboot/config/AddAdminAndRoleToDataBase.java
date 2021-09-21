@@ -29,11 +29,13 @@ public class AddAdminAndRoleToDataBase {
         roleService.save(roleAdmin);
         roleService.save(roleUser);
         // Admin
-        User admin = new User("Zhalaldin", "Toichubaev", (byte)20, "Zhalal", "admin");
+        User admin = new User("Zhalaldin", "Toichubaev", (byte)20, "Zhalal@mail.ru", "admin");
         // User
-        User user = new User("Igor", "Ptushkin",(byte)27, "Igorek","igorek");
+        User user = new User("Igor", "Ptushkin",(byte)27, "Igorek@mail.ru","igorek");
+        User user2 = new User("Elena", "Sherbakova",(byte)25, "Elena@mail.ru","elena");
         // save people with roles
         userService.add(admin, new Long[]{1L, 2L});
         userService.add(user, new Long[]{2L});
+        userService.add(user2, new Long[]{2L});
     }
 }
