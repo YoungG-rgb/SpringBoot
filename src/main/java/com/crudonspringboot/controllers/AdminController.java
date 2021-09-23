@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
 import java.security.Principal;
 
 @Controller
@@ -24,7 +23,7 @@ public class AdminController {
 
     @GetMapping()
     public String index(@ModelAttribute("newUser") User user, Model model, Principal principal){
-        model.addAttribute("user", userService.getAllUsers());
+        model.addAttribute("allUsers", userService.getAllUsers());
         model.addAttribute("currentUser", userService.loadUserByUsername(principal.getName()));
         model.addAttribute("AllRoles", roleService.getAllRoles());
         return "admin/index";
@@ -37,21 +36,10 @@ public class AdminController {
         return "redirect:/admin";
     }
 
-    @GetMapping("/{id}/update")
-    public String editPerson(Model model, @PathVariable("id") int id) {
-        model.addAttribute("userForUpdate", userService.getById(id));
-        return "admin/index";
-    }
-
     @PatchMapping("/{id}")
     public String updatePerson(@ModelAttribute("user") User user,
-                               @RequestParam(value = "selectedRoles", required = false) Long [] selectedRoles,
-                               @RequestParam(value = "hasRoles", required = false) Long [] hasRoles) {
-        if (selectedRoles == null) {
-            userService.update(user, hasRoles);
-        } else {
-            userService.update(user, selectedRoles);
-        }
+                               @RequestParam(value = "selectedRoles", required = false) Long [] selectedRoles) {
+        userService.update(user, selectedRoles);
         return "redirect:/admin";
     }
 
